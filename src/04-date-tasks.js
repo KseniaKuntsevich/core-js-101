@@ -103,13 +103,24 @@ function timeSpanToString(t1, t2) {
  * @return {number}
  *
  * @example:
- *    Date.UTC(2016,2,5, 0, 0) => 0
- *    Date.UTC(2016,3,5, 3, 0) => Math.PI/2
- *    Date.UTC(2016,3,5,18, 0) => Math.PI
- *    Date.UTC(2016,3,5,21, 0) => Math.PI/2
+ *    Date.UTC(2016,2,5, 0, 0) => 0 //3 = 90 0
+ *    Date.UTC(2016,3,5, 3, 0) => Math.PI/2 //6 = 180 2
+ *    Date.UTC(2016,3,5,18, 0) => Math.PI  //21 =  90 1
+ *    Date.UTC(2016,3,5,21, 0) => Math.PI/2 //0 = 0  2
  */
-function angleBetweenClockHands(/* date */) {
+function angleBetweenClockHands(/* d */) { //--------------------------------------
   throw new Error('Not implemented');
+  // const hourAngle = 360.0 / 12;
+  // const minAngle = 360.0 / 60;
+  // const hourDAngle = hourAngle / 60;
+  // const minDAngle = minAngle / 60;
+
+
+  // const myMinAngle = d.getMinutes() * minAngle + minDAngle * d.getSeconds();
+  // const myHourAngle = (d.getHours() % 12) * hourAngle + hourDAngle * d.getMinutes();
+  // const angle = myHourAngle - myMinAngle;
+
+  // return angle > 0 ? angle : 360 + angle;
 }
 
 
