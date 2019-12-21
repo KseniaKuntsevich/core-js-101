@@ -210,8 +210,10 @@ function findFirstSingleChar(/* str */) {
  *   5, 3, true, true   => '[3, 5]'
  *
  */
-function getIntervalString(/* a, b, isStartIncluded, isEndIncluded */) {
-  throw new Error('Not implemented');
+function getIntervalString(a, b, isStartIncluded, isEndIncluded) {
+  const x = a < b ? a : b;
+  const y = a < b ? b : a;
+  return `${isStartIncluded ? '[' : '('}${x}, ${y}${isEndIncluded ? ']' : ')'}`;
 }
 
 
@@ -227,8 +229,8 @@ function getIntervalString(/* a, b, isStartIncluded, isEndIncluded */) {
  * 'rotator' => 'rotator'
  * 'noon' => 'noon'
  */
-function reverseString(/* str */) {
-  throw new Error('Not implemented');
+function reverseString(str) {
+  return str.split('').reverse().join('');
 }
 
 
@@ -244,8 +246,9 @@ function reverseString(/* str */) {
  *   87354 => 45378
  *   34143 => 34143
  */
-function reverseInteger(/* num */) {
-  throw new Error('Not implemented');
+function reverseInteger(n) {
+  const str = `${n}`;
+  return str.split('').reverse().join('');
 }
 
 
@@ -269,9 +272,23 @@ function reverseInteger(/* num */) {
  *   5436468789016589 => false
  *   4916123456789012 => false
  */
+
 function isCreditCardNumber(/* ccn */) {
   throw new Error('Not implemented');
+  // let sum = 0;
+  // for (let i = 0; i < ccn.length; i += 1) {
+  //   let intVal = parseInt(ccn.substr(i, 1), 10);
+  //   if (i % 2 === 0) {
+  //     intVal *= 2;
+  //     if (intVal > 9) {
+  //       intVal = 1 + (intVal % 10);
+  //     }
+  //   }
+  //   sum += intVal;
+  // }
+  // return (sum % 10) === 0;
 }
+
 
 /**
  * Returns the digital root of integer:
@@ -287,8 +304,11 @@ function isCreditCardNumber(/* ccn */) {
  *   10000 ( 1+0+0+0+0 = 1 ) => 1
  *   165536 (1+6+5+5+3+6 = 26,  2+6 = 8) => 8
  */
-function getDigitalRoot(/* num */) {
-  throw new Error('Not implemented');
+function getDigitalRoot(num) {
+  let res = `${num}`;
+  res = res.split('').reduce((a, b) => +a + +b);
+  res = res > 9 ? getDigitalRoot(res) : res;
+  return res;
 }
 
 
@@ -413,8 +433,56 @@ function getMatrixProduct(/* m1, m2 */) {
  *    [    ,   ,    ]]
  *
  */
-function evaluateTicTacToePosition(/* position */) {
-  throw new Error('Not implemented');
+function evaluateTicTacToePosition(p) {
+  const arr = p.map((a) => {
+    const b = [].concat(a);
+    for (let i = 0; i < 3; i += 1) {
+      b[i] = b[i] || null;
+    }
+    return b;
+  });
+  const getHorizontalRepeated = (table) => {
+    const check = (row) => {
+      const o = row.every((value) => value === '0');
+      const x = row.every((value) => value === 'X');
+      const X = x ? 'X' : null;
+      const O = o ? '0' : null;
+      return X || O;
+    };
+
+    let repeatedCell;
+
+    table.forEach((row) => { if (!repeatedCell) repeatedCell = check(row); });
+
+    return repeatedCell;
+  };
+
+  const getVerticalRepeated = (table) => {
+    const countRepeated = table[0].slice();
+
+    table.forEach((row) => {
+      row.forEach((cell, index) => {
+        countRepeated[index] = countRepeated[index] === cell ? cell : null;
+      });
+    });
+
+    return countRepeated.reduce((sum, cell) => sum || cell);
+  };
+
+  const getDiagonalRepeated = (table) => {
+    const center = table[1][1];
+    const a = table[0][0] === center && table[2][2] === center;
+    const b = table[0][2] === center && table[2][0] === center;
+    return (a || b) ? center : null;
+  };
+
+  let res = getVerticalRepeated(arr);
+  if (res) return res;
+
+  res = getHorizontalRepeated(arr);
+  if (res) return res;
+
+  return getDiagonalRepeated(arr);
 }
 
 
