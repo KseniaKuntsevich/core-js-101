@@ -282,20 +282,26 @@ function reverseInteger(n) {
  *   4916123456789012 => false
  */
 
-function isCreditCardNumber(/* ccn */) {
-  throw new Error('Not implemented');
-  // let sum = 0;
-  // for (let i = 0; i < ccn.length; i += 1) {
-  //   let intVal = parseInt(ccn.substr(i, 1), 10);
-  //   if (i % 2 === 0) {
-  //     intVal *= 2;
-  //     if (intVal > 9) {
-  //       intVal = 1 + (intVal % 10);
-  //     }
-  //   }
-  //   sum += intVal;
-  // }
-  // return (sum % 10) === 0;
+function isCreditCardNumber(ccn) {
+  const digits = (`${ccn}`).split('');
+
+  let sum = 0;
+
+  for (let i = 0; i < digits.length; i += 1) {
+    let cardNum = parseInt(digits[i], 10);
+
+    if ((digits.length - i) % 2 === 0) {
+      cardNum *= 2;
+
+      if (cardNum > 9) {
+        cardNum -= 9;
+      }
+    }
+
+    sum += cardNum;
+  }
+
+  return sum % 10 === 0;
 }
 
 
@@ -437,8 +443,15 @@ function getCommonDirectoryPath(s) {
  *                         [ 6 ]]
  *
  */
-function getMatrixProduct(/* m1, m2 */) {
-  throw new Error('Not implemented');
+function getMatrixProduct(m1, m2) {
+  if (m1.length !== m2.length) {
+    const c1 = [m1.join(',').split(',')];
+    const c2 = [m2.join(',').split(',')];
+    return getMatrixProduct(c1, c2);
+  }
+  const cross = m1.map((arr, i) => arr.map((n, j) => (n > 0 ? n * m2[i][j] : m2[i][j])));
+  if (cross.length < 2) cross[0] = [].concat(cross[0].reduce((a, b) => a + b));
+  return cross;
 }
 
 
