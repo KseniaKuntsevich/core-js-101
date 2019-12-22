@@ -175,18 +175,27 @@ function isInsideCircle(c, point) {
  *   'abracadabra'  => 'c'
  *   'entente' => null
  */
-function findFirstSingleChar(/* str */) {
-  throw new Error('Not implemented');
-  // const s = str.split(/([a-zA-Z0-9])/);
-  // let res = null;
-  // for (let i = 0; i < s.length && !res; i += 1) {
-  //   const reg = '/'+s[i]+'/';
-
-  //   if (str.match(reg).length === 1) { res = lett; }
-  // }
-  // return res;
+function findFirstSingleChar(str) {
+  const arr = str.split('').filter((n) => n && n !== ' ');
+  let res;
+  let i = 0;
+  while (!res && i < arr.length) {
+    const reg = new RegExp(`(${arr[i]})`, 'g');
+    if (str.match(reg).length === 1)res = arr[i];
+    i += 1;
+  }
+  return res;
 }
 
+
+// const s = str.split(/([a-zA-Z0-9])/);
+// let res = null;
+// for (let i = 0; i < s.length && !res; i += 1) {
+//   const reg = '/'+s[i]+'/';
+
+//   if (str.match(reg).length === 1) { res = lett; }
+// }
+// return res;
 
 /**
  * Returns the string representation of math interval,
@@ -333,8 +342,25 @@ function getDigitalRoot(num) {
  *   '{)' = false
  *   '{[(<{[]}>)]}' = true
  */
-function isBracketsBalanced(/* str */) {
-  throw new Error('Not implemented');
+
+
+function isBracketsBalanced(str) {
+  if (str.length % 2) return false;
+  const keys = {
+    '[': ']', '(': ')', '{': '}', '<': '>',
+  };
+  const sequence = [];
+
+
+  str.split('').forEach((bracket) => {
+    if (bracket === keys[sequence[sequence.length - 1]]) {
+      sequence.pop();
+    } else {
+      sequence.push(bracket);
+    }
+  });
+
+  return sequence.length === 0;
 }
 
 
@@ -358,8 +384,8 @@ function isBracketsBalanced(/* str */) {
  *    365, 4  => '11231'
  *    365, 10 => '365'
  */
-function toNaryString(/* num, n */) {
-  throw new Error('Not implemented');
+function toNaryString(num, n) {
+  return Number(num).toString(n);
 }
 
 
@@ -375,8 +401,21 @@ function toNaryString(/* num, n */) {
  *   ['/web/assets/style.css', '/.bin/mocha',  '/read.me'] => '/'
  *   ['/web/favicon.ico', '/web-scripts/dump', '/webalizer/logs'] => '/'
  */
-function getCommonDirectoryPath(/* pathes */) {
-  throw new Error('Not implemented');
+function getCommonDirectoryPath(s) {
+  let k = s[0].length;
+  for (let i = 1; i < s.length; i += 1) {
+    k = Math.min(k, s[i].length);
+
+    let get = false;
+    for (let j = 0; j < k && !get; j += 1) {
+      if (s[i][j] !== s[0][j]) {
+        k = j;
+        get = true;
+      }
+    }
+  }
+  k = s[0].substring(0, k).split('').lastIndexOf('/') + 1;
+  return s[0].substring(0, k);
 }
 
 

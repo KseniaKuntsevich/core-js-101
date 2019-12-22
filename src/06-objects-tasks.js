@@ -116,66 +116,127 @@ function fromJSON(proto, json) {
  *  For more examples see unit tests.
  */
 
-const cssSelectorBuilder = { //-------------------
 
-  element(/* proto, json */) {
-    throw new Error('Not implemented');
+function Selector() {
+  return {
+    str: '',
+    last: null,
+    unicCall: { id: 0, pseudoElement: 0, element: 0 },
+    orderRule: ['element', 'id', 'class', 'attr', 'pseudoClass', 'pseudoElement'],
+
+    checkCall(fName) {
+      this.unicCall[fName] += 1;
+      if (this.unicCall[fName] > 1) {
+        throw new Error('Element, id and pseudo-element should not occur more then one time inside the selector');
+      }
+    },
+
+    checkOrder(fName) {
+      const isOrdered = this.orderRule.indexOf(this.last) <= this.orderRule.indexOf(fName);
+      this.last = fName;
+      if (!isOrdered) {
+        throw new Error('Selector parts should be arranged in the following order: element, id, class, attribute, pseudo-class, pseudo-element');
+      }
+    },
+
+    callMeth(v, fName, addBefore, addAfter) {
+      this.checkCall(fName);
+      this.checkOrder(fName);
+      this.str += addBefore || '';
+      this.str += v;
+      this.str += addAfter || '';
+      return this;
+    },
+
+
+    element(v) {
+      return this.callMeth(v, 'element');
+    },
+
+    id(v) {
+      return this.callMeth(v, 'id', '#');
+    },
+
+    class(v) {
+      return this.callMeth(v, 'class', '.');
+    },
+
+    attr(v) {
+      return this.callMeth(v, 'attr', '[', ']');
+    },
+
+    pseudoClass(v) {
+      return this.callMeth(v, 'pseudoClass', ':');
+    },
+
+    pseudoElement(v) {
+      return this.callMeth(v, 'pseudoElement', '::');
+    },
+
+    stringify() {
+      const res = this.str;
+      this.str = '';
+      this.last = null;
+      this.prototype.selectors = [];
+      return res;
+    },
+
+  };
+}
+
+
+const cssSelectorBuilder = {
+  selectors: [],
+  splitters: [],
+
+  setNewSelector(v, f) {
+    const n = new Selector();
+    n[f](v);
+    this.selectors.push(n);
+    n.prototype = this;
+    return n;
   },
 
-  id(/* proto, json */) {
-    throw new Error('Not implemented');
+  element(v) {
+    return this.setNewSelector(v, 'element');
   },
 
-  class(/* proto, json */) {
-    throw new Error('Not implemented');
+  id(v) {
+    return this.setNewSelector(v, 'id');
   },
 
-  attr(/* proto, json */) {
-    throw new Error('Not implemented');
+  class(v) {
+    return this.setNewSelector(v, 'class');
   },
 
-  pseudoClass(/* proto, json */) {
-    throw new Error('Not implemented');
+  attr(v) {
+    return this.setNewSelector(v, 'attr');
   },
 
-  pseudoElement(/* proto, json */) {
-    throw new Error('Not implemented');
+  pseudoClass(v) {
+    return this.setNewSelector(v, 'pseudoClass');
   },
 
-  combine(/* proto, json */) {
-    throw new Error('Not implemented');
+  pseudoElement(v) {
+    return this.setNewSelector(v, 'pseudoElement');
   },
 
-  // element(v) {
-  //   this.el = document.createElement(v);
-  //   return this;
-  // },
+  combine(a, b) {
+    this.splitters.unshift(b);
+    return this;
+  },
 
-  // id(v) {
-  //   this.el.setAttribute('id', v);
-  //   return this;
-  // },
+  stringify() {
+    const res = this.selectors.map((sel, i) => {
+      let r = sel.stringify();
+      if (this.splitters[i]) r += ` ${this.splitters[i]} `;
+      return r;
+    }).reduce((a, b) => (a + b));
 
-  // class(v) {
-  //   this.el.classList.add(v);
-  //   return this;
-  // },
-
-  // attr(v) {
-  //   return this;
-  // },
-
-  // pseudoClass(v) {
-  //   return this;
-  // },
-
-  // pseudoElement(v) {
-  //   return this;
-  // },
-
-  // combine(v) {
-  //   return this;
-  // },
+    this.selectors = [];
+    this.splitters = [];
+    return res;
+  },
 };
 
 

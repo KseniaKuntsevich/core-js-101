@@ -97,12 +97,34 @@ function getFastestPromise(arr) {
  *    });
  *
  */
-function chainPromises(/* array, action */) {
+function chainPromises(/* promises, act */) {
   throw new Error('Not implemented');
-  // let promise = array[0];
-  // const res = 0;
-  // for (let i = 1; i < array.length; i += 1) promise = promise.then((r) => action(r, res));
-  // return promise;
+  // const result = [];
+  // const rej = [];
+  // result.length = promises.length;
+  // result.fill(null);
+
+  // return new Promise((resolve) => {
+  //   promises.forEach((prom) => {
+  //     prom.then(
+  //       (resp) => { result.push(resp);
+  //       }).catch(err => {
+  //         result.pop();
+  //         rej.push(err);
+  //       })
+  //     ;
+  //   });
+
+  //   const timerId = setInterval(() => {
+  //     const isDone = result.every((response) => (response));
+
+  //     if (isDone) {
+  //       clearInterval(timerId);
+
+  //       resolve(result.reduce(act));
+  //     }
+  //   }, 10);
+  // });
 }
 
 module.exports = {
